@@ -1,0 +1,85 @@
+#
+# JBoss BPMSuite 6.2.0.
+#
+FROM jbpm-workshop/jboss-eap:6.4.5
+FROM jbossdemocentral/developer
+
+MAINTAINER ddoyle <ddoyle@redhat.com>
+
+EXPOSE 8080 9990 9999
+
+# Environment Variables
+ENV BPMS_VERSION_MAJOR 6
+ENV BPMS_VERSION_MINOR 2
+ENV BPMS_VERSION_MICRO 0
+ENV BPMS_VERSION_BUILD GA
+
+ENV EAP_VERSION_MAJOR 6
+ENV EAP_VERSION_MINOR 4
+ENV EAP_VERSION_MICRO 0
+ENV EAP_VERSION_PATCH 4
+
+ENV BPMS_HOME /opt/jboss/jboss-eap-6.4
+ENV BUSINESS_CENTRAL_HOME $BPMS_HOME/standalone/deployments/business-central.war
+
+# Add installation files to tmp.
+RUN mkdir /tmp/dockerfile_copy
+COPY dockerfile_copy/ /tmp/dockerfile_copy
+
+# Configure settings.xml and JBoss EAP 6.4 standalone.conf
+RUN cp /tmp/dockerfile_copy/settings.xml /opt/jboss/settings.xml
+
+# Configure the Maven repo
+#RUN unzip /tmp/dockerfile_copy/jboss-bpmsuite-6.2.0.GA-maven-repository.zip -d /opt/jboss/.m2/
+#RUN unzip /tmp/dockerfile_copy/jboss-datagrid-6.6.0-maven-repository.zip -d /opt/jboss/.m2/
+
+# Unzip the JBoss EAP installation.
+RUN unzip -q /tmp/dockerfile_copy/jboss-eap-6.4.0.zip -d /opt/jboss
+
+# Add a default admin user.
+RUN /opt/jboss/jboss-eap-6.4/bin/add-user.sh admin jboss@01 --silent
+
+# Patch the EAP 6.4 installation
+RUN $BPMS_HOME/bin/jboss-cli.sh --command="patch apply /tmp/dockerfile_copy/jboss-eap-6.4.4-patch.zip --override-modules"
+
+#Install JBoss BPMSuite
+RUN /usr/bin/unzip -qo /tmp/dockerfile_copy/jboss-bpmsuite-6.2.0.GA-deployable-eap6.x.zip -d /opt/jboss
+#RUN /usr/bin/unzip -qo /tmp/dockerfile_copy/jboss-bpmsuite-6.2.0.GA-supplementary-tools.zip -d /opt/jboss
+
+#Install PostgreSQL layer
+RUN /tmp/dockerfile_copy/install-jboss-module.sh -m /tmp/dockerfile_copy/postgresql-module.zip -j $BPMS_HOME -l postgresql -e true
+#Install JBoss DataGrid layer
+RUN /tmp/dockerfile_copy/install-jboss-module.sh -m /tmp/dockerfile_copy/jboss-datagrid-6.6.0-eap-modules-remote-java-client-module.zip -j $BPMS_HOME -l jdg -e true
+
+# Create initial BPMSuite users.
+RUN $BPMS_HOME/bin/add-user.sh -a -r ApplicationRealm -u bpmsAdmin -p jboss@01 -ro admin,analyst,developer,kie-server,rest-all --silent
+RUN $BPMS_HOME/bin/add-user.sh -a -r ApplicationRealm -u brmsAdmin -p jboss@01 -ro admin,analyst,developer,kie-server,rest-all --silent
+RUN $BPMS_HOME/bin/add-user.sh -a -r ApplicationRealm -u kieserver -p kieserver1! -ro kie-server --silent
+
+# Configure BPMSuite
+RUN /tmp/dockerfile_copy/setup-jboss-eap-profile.sh -j /opt/jboss/jboss-eap-6.4 -s standalone.xml -t bpms-standalone.xml -c /tmp/dockerfile_copy/cli-scripts
+
+# Configure business-central jboss-deployment-structure.xml
+# Add JDG HotRod Client module dependency to JBoss BPMSuite business-central.
+RUN mv $BUSINESS_CENTRAL_HOME/WEB-INF/jboss-deployment-structure.xml $BUSINESS_CENTRAL_HOME/WEB-INF/jboss-deployment-structure.xml.orig && \
+	sed '53 a \\t<module name="org.infinispan.commons" slot="jdg-6.6" />\n<module name="org.infinispan.client.hotrod" slot="jdg-6.6" />\n' $BUSINESS_CENTRAL_HOME/WEB-INF/jboss-deployment-structure.xml.orig > $BUSINESS_CENTRAL_HOME/WEB-INF/jboss-deployment-structure.xml
+
+#Change the database dialect of the system from H2 to PostgreSQLDialect
+RUN sed -i "s/org.hibernate.dialect.H2Dialect/org.hibernate.dialect.PostgreSQLDialect/" $BUSINESS_CENTRAL_HOME/WEB-INF/classes/META-INF/persistence.xml
+
+#Create the BPMS Maven and Git directories
+RUN mkdir -p /opt/jboss/bpms-git/.niogit && mkdir /opt/jboss/bpms-maven-repository && mkdir /opt/jboss/wih-maven-repository
+RUN cp -r /tmp/dockerfile_copy/bpms-demo-niogit/* /opt/jboss/bpms-git/.niogit
+RUN unzip /tmp/dockerfile_copy/wih-repository.zip -d /opt/jboss/wih-maven-repository
+
+# Copy standalone.conf to enable remote debugging.
+RUN cp /tmp/dockerfile_copy/standalone.conf $BPMS_HOME/bin/standalone.conf
+
+# Clean up. Need to change to root for now because Docker COPY copies files as root (this is likely gonna change in future versions, where Docker COPY will respect USER config.
+USER root
+RUN rm -rf /tmp/dockerfile_copy && rm -rf $BPMS_HOME/standalone/configuration/standalone_xml_history
+USER jboss
+
+# Define the entrypoint and cmd.
+ENTRYPOINT ["/opt/jboss/jboss-eap-6.4/bin/standalone.sh"]
+CMD ["-b", "0.0.0.0", "-bmanagement", "0.0.0.0", "-c", "bpms-standalone.xml"]

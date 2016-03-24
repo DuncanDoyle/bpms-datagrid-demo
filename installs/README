@@ -1,0 +1,9 @@
+Download the following from the JBoss Customer Portal
+
+ * EAP zip (jboss-eap-6.4.0.zip)
+ * EAP patch (jboss-eap-6.4.4-patch.zip)
+ * BPM Suite deployeable zip (jboss-bpmsuite-6.2.0.GA-deployable-eap6.x.zip)
+ * JBoss DataGrid Server zip (jboss-datagrid-6.6.0-server.zip)
+ * JBoss DataGrid Remote Client EAP modules (jboss-datagrid-6.6.0-eap-modules-remote-java-client.zip)
+
+and copy to this directory for the prepare-demo.sh and build-docker-images.sh scripts to work.

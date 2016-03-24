@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd" xmlns="http://maven.apache.org/SETTINGS/1.1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <localRepository>/opt/jboss/.m2/repository</localRepository>
+  <servers>
+  </servers>
+  <profiles>
+    <!--
+    <profile>
+      <properties>
+        <maven.deploy.updateReleaseInfo>false</maven.deploy.updateReleaseInfo>
+      </properties>
+      <id>development</id>
+    </profile>
+    -->
+    <profile>
+      <repositories>
+        <repository>
+          <releases>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+          <snapshots>
+            <updatePolicy>always</updatePolicy>
+          </snapshots>
+          <id>wih-maven-repository</id>
+          <name>WorkItemHandler Maven Repository</name>
+          <url>file:///opt/jboss/wih-maven-repository/wih-repository</url>
+        </repository>
+      </repositories>
+      <id>wih-maven-repository</id>
+    </profile>
+  </profiles>
+  <activeProfiles>
+<!--
+    <activeProfile>jboss-datagrid-6.6.0.GA-repository</activeProfile>
+    <activeProfile>jboss-brms-bpmsuite-6.2.0.GA-maven-repository</activeProfile>
+-->
+    <activeProfile>wih-maven-repository</activeProfile>
+  </activeProfiles>
+  <pluginGroups>
+<!--
+    <pluginGroup>org.apache.maven.plugins</pluginGroup>
+    <pluginGroup>org.codehaus.mojo</pluginGroup>
+-->
+  </pluginGroups>
+</settings>

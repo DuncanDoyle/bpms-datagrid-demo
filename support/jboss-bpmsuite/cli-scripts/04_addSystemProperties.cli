@@ -1,0 +1,10 @@
+#
+# Configures BPMSuite System properties.
+#
+# author: ddoyle@redhat.com
+#
+/system-property=org.uberfire.nio.git.dir:add(value="/opt/jboss/bpms-git")
+/system-property=org.guvnor.m2repo.dir:add(value="/opt/jboss/bpms-maven-repository")
+/system-property=kie.maven.settings.custom:add(value="/opt/jboss/settings.xml")
+/system-property=org.uberfire.nio.git.daemon.host:add(value="0.0.0.0")
+/system-property=org.uberfire.nio.git.ssh.host:add(value="0.0.0.0")

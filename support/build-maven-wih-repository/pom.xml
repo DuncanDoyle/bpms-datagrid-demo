@@ -1,0 +1,37 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.jboss.ddoyle.jbpm</groupId>
+	<artifactId>infinispan-wih-docker-build-repository</artifactId>
+	<version>1.0.0</version>
+	<packaging>pom</packaging>
+	<properties>
+		<version.org.jboss.parent>16</version.org.jboss.parent>
+		<version.infinispan.wih>1.0.0</version.infinispan.wih>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.jboss</groupId>
+			<artifactId>jboss-parent</artifactId>
+			<version>${version.org.jboss.parent}</version>
+			<scope>compile</scope>
+			<type>pom</type>
+		</dependency>
+		<!-- Need to explicitly add the parent pom as well. Seems that the 'mdep.addParentPoms' does not copy the parent POM of our infinispan-workitemhandler. -->
+		<dependency>
+			<groupId>org.jboss.ddoyle.jbpm</groupId>
+			<artifactId>jbpm-workitems-parent</artifactId>
+			<version>${version.infinispan.wih}</version>
+			<scope>compile</scope>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.ddoyle.jbpm</groupId>
+			<artifactId>infinispan-workitemhandler</artifactId>
+			<version>${version.infinispan.wih}</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+	<build>
+	</build>
+</project>

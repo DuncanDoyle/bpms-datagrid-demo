@@ -1,0 +1,25 @@
+postgresql:
+  image: jbossdemocentral/bpms-jdg-integration-demo_postgresql:9.3
+  ports:
+    - "5432:5432"
+datagrid:
+    image: jbossdemocentral/bpms-jdg-integration-demo_jboss-datagrid-server:6.6.0
+    ports: 
+      - "8180:8080"
+      - "10090:9990"
+      - "10099:9999"
+      - "11222:11222"
+bpmSuite:
+   image: jbossdemocentral/bpms-jdg-integration-demo_jboss-bpmsuite:6.2.0
+   links:
+    - postgresql:postgresql
+    - datagrid:datagrid
+#   volumes_from:
+#    - jboss-bpms-data
+   ports:
+    - "8001:8001"
+    - "8080:8080"
+    - "9990:9990"
+    - "9999:9999"
+    - "8787:8787"
+
