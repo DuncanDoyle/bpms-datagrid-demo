@@ -23,9 +23,9 @@ Building the demo
  - jboss-bpmsuite-6.2.0.GA-deployable-eap6.x.zip: JBoss BPMSuite 6.2.0.GA deployables.
  - jboss-datagrid-6.6.0-server.zip: JBoss DataGrid Server 6.6.0 distribution
  - jboss-datagrid-6.6.0-eap-modules-remote-java-client.zip: JBoss DataGrid 6.6.0 Remote Client EAP modules
-2. Run the "prepare-demo.sh" script, which will prepare things like the PostgreSQL EAP Modules, the JBoss DataGrid EAP Modules, the Infinspan/JDG WorkItemHandlers, etc.
-3. Run the "build-docker-images.sh" script, which will build the PostgreSQL, JBoss DataGrid Server and JBoss BPMSuite Docker images.
-4. Run "start-docker.sh" script to start the demo.
+2. Run the `prepare-demo.sh` script, which will prepare things like the PostgreSQL EAP Modules, the JBoss DataGrid EAP Modules, the Infinspan/JDG WorkItemHandlers, etc.
+3. Run the `build-docker-images.sh` script, which will build the PostgreSQL, JBoss DataGrid Server and JBoss BPMSuite Docker images.
+4. Run `start-docker.sh` script to start the demo.
 
 Running the demo
 ----------------
