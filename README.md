@@ -48,6 +48,7 @@ The demo consists of 3 Docker containers:
 * JBoss BPMSuite
 
 Second, the demo utilizes a custom jBPM WorkItemHandler to eneable integration between JBoss BPMSuite and JBoss DataGrid. As such, this demo demonstrates, apart from the BPMSuit and JDG integration:
+
 1. How to add additional JBoss EAP module-layers to the JBoss BPMSuite platform:
  - The demo installs both a PostgreSQL modules layer and a JBoss DataGrid Client modules layer to the JBoss BPMSuite platform at `/opt/jboss/jboss-eap-6.4/modules/system/layers` in the BPMSuite Docker container.
  - The PostgreSQL module allows connection to the PostgreSQL datasource.
