@@ -15,7 +15,8 @@ Information on how to install Docker and docker-compose on various platforms can
 Note that this demo is developed to run on both Linux and Mac OS X. Scripts for Windows are currently not available, but will be added in the near future).
 ```
 
-To build the demo:
+Building the demo
+-----------------
 1. Add the following files to the "installs" directory:
  - jboss-eap-6.4.0.zip: JBoss EAP 6.4.0 distribution
  - jboss-eap-6.4.4-patch.zip: JBoss EAP 6.4.4 Patch
@@ -26,7 +27,8 @@ To build the demo:
 3. Run the "build-docker-images.sh" script, which will build the PostgreSQL, JBoss DataGrid Server and JBoss BPMSuite Docker images.
 4. Run "start-docker.sh" script to start the demo.
 
-Running the demo:
+Running the demo
+----------------
 1. Build & Deploy the project.
 2. Start a new process instance. You will be asked to enter an _ispnKey_. This i§s the key that will be used to access JBoss DataGrid and store and/or retrieve data.
 3. On the first run of the demo, the grid will not contain any value for the given _ispnKey_. A human-task will is created in which allows the user to enter a value for the given _ispnKey_.
